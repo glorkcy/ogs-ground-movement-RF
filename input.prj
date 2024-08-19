@@ -15,8 +15,8 @@
                 <youngs_modulus>E</youngs_modulus>
                 <poissons_ratio>nu</poissons_ratio>
             </constitutive_relation>
-			<initial_stress>InitialTotalStressField</initial_stress>
-            <process_variables>
+            <initial_stress type= "total">InitialTotalStressField</initial_stress>  <!--total_initial_stress_HM.prj-->
+			<process_variables>
                 <displacement>displacement</displacement>
                 <pressure>pressure</pressure>
             </process_variables>
@@ -160,13 +160,17 @@
             <expression>if (y >= -50, 0, 1000*(-50-y)*9.81)</expression>
         </parameter>
 		<parameter>
-            <name>InitialTotalStressField</name> <!--effective stress!-->
-            <type>Function</type>
-            <expression> 16*1000*y</expression>
-            <!--expression> 0.0</expression-->
-            <!--expression>((0.35-1.0)*1000 + (1-0.35)*3000) * 9.81*y</expression-->
+            <name>InitialTotalStressField</name>
+			<type>Function</type>
+			<expression> 0</expression>
+			<expression> if (y >= -50, 16*1000*-y, 16*1000*50+20*(-50-y)*1000)</expression>
+			<expression> 0</expression>
+			<expression> 0</expression>
+            <!--expression> 0.3 / (1-0.3) * ((0.35-1.0)*1000 + (1-0.35)*3000) * 9.81*y</expression>
+			<expression> ((0.35-1.0)*1000 + (1-0.35)*3000) * 9.81*y</expression>
+			<expression> 0.3 / (1-0.3) * ((0.35-1.0)*1000 + (1-0.35)*3000) * 9.81*y</expression>
+			<expression> 0</expression-->
         </parameter>
-		
     </parameters>
 	
     <process_variables>
@@ -175,7 +179,7 @@
             <components>2</components>
             <order>1</order>
             <initial_condition>displacement0</initial_condition>
-			<!--compensate_non_equilibrium_initial_residuum>true</compensate_non_equilibrium_initial_residuum-->
+			<compensate_non_equilibrium_initial_residuum>true</compensate_non_equilibrium_initial_residuum>
             <boundary_conditions>
                 <boundary_condition>
                     <geometrical_set>square_1x1_geometry</geometrical_set>
@@ -205,10 +209,13 @@
             <components>1</components>
             <order>1</order>
             <initial_condition>initial_pressure</initial_condition>
-			<!--compensate_non_equilibrium_initial_residuum>true</compensate_non_equilibrium_initial_residuum-->
+			<compensate_non_equilibrium_initial_residuum>true</compensate_non_equilibrium_initial_residuum>
             <boundary_conditions>
                 <boundary_condition>
                     <mesh>domain_with_stiffness</mesh>
+					<!--type>Dirichlet</type>
+                    <component>0</component>
+                    <parameter>zero</parameter-->
                     <type>Python</type>
 					<bc_object>PorePressure_py</bc_object>
 					<!--flush_stdout>true</flush_stdout-->
