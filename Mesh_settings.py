@@ -13,4 +13,4 @@ variance = 9e12    # for making random field
 horizontal_scale_of_fluctuation = 24.5   # sand- literature value: 24.5
 vertical_scale_of_fluctuation = 1.17    # sand- literature value: 1.17
 
-slope = 0.02
+slope = 0.02   # stiffness gravity relationship, increase mPa/m
