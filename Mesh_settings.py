@@ -5,7 +5,7 @@ depth_of_boundary = 60  # in meter
 number_of_cells_x = 10
 number_of_cells_y = 60
 
-number_of_layers = 1 # in the meantime, keep it as 1 for simplicity
+number_of_layers = 1 # in the meantime, keep it as 1 
 
 stiffness_mean = [1e7]  # Pa 
 variance = 9e12    # for making random field
