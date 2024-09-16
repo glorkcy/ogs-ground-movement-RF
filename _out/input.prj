@@ -4,7 +4,7 @@
         <mesh>domain_with_stiffness.vtu</mesh>
     </meshes>
 	<python_script>python_BC_OGS.py</python_script> 
-    <geometry>square_1x1.gml</geometry>
+    <geometry>rectangle_10x60.gml</geometry>
     <processes>
         <process>
             <name>HM</name>
@@ -182,21 +182,21 @@
 			<compensate_non_equilibrium_initial_residuum>true</compensate_non_equilibrium_initial_residuum>
             <boundary_conditions>
                 <boundary_condition>
-                    <geometrical_set>square_1x1_geometry</geometrical_set>
+                    <geometrical_set>rectangle_10x60_geometry</geometrical_set>
                     <geometry>left</geometry>
                     <type>Dirichlet</type>
                     <component>0</component>
                     <parameter>zero</parameter>
                 </boundary_condition>
                 <boundary_condition>
-                    <geometrical_set>square_1x1_geometry</geometrical_set>
+                    <geometrical_set>rectangle_10x60_geometry</geometrical_set>
                     <geometry>right</geometry>
                     <type>Dirichlet</type>
                     <component>0</component>
                     <parameter>zero</parameter>
                 </boundary_condition>
                 <boundary_condition>
-                    <geometrical_set>square_1x1_geometry</geometrical_set>
+                    <geometrical_set>rectangle_10x60_geometry</geometrical_set>
                     <geometry>bottom</geometry>
                     <type>Dirichlet</type>
                     <component>1</component>
