@@ -24,14 +24,14 @@
                 <secondary_variable internal_name="sigma" output_name="sigma"/>
                 <secondary_variable internal_name="epsilon" output_name="epsilon"/>
             </secondary_variables>
-            <specific_body_force>0 -9.81</specific_body_force>  <!-- 0 0 -->
+            <specific_body_force>0 -9.81</specific_body_force>  
         </process>
     </processes>
     <media>
         <medium>
             <phases>
                 <phase>
-                    <type>Gas</type>
+                    <type>AqueousLiquid</type>
                     <properties>
                         <property>
                             <name>viscosity</name>
@@ -40,8 +40,14 @@
                         </property>
                         <property>
                             <name>density</name>
-                            <type>Constant</type>
-                            <value>1e3</value>
+							<type>Function</type>
+							<value>
+								<expression>if (liquid_phase_pressure> 0,1000, 0.01) </expression>
+							</value>
+							<dvalue>
+								<variable_name> liquid_phase_pressure </variable_name>
+								<expression>0</expression>
+							</dvalue>
                         </property>
                     </properties>
                 </phase>
@@ -98,13 +104,13 @@
                     <t_end>45</t_end>   <!-- 1825 -->
                     <timesteps>
                         <pair>
-                            <repeat>15</repeat>   <!-- 365 -->
-                            <delta_t>1</delta_t>   <!-- 1 -->
+                            <repeat>45</repeat>   
+                            <delta_t>1</delta_t>   
                         </pair>
-						<pair>
-                            <repeat>10</repeat>   <!-- 365 -->
-                            <delta_t>3</delta_t>   <!-- 1 -->
-                        </pair>
+						<!--pair>
+                            <repeat>10</repeat>   
+                            <delta_t>3</delta_t>   
+                        </pair-->
                     </timesteps>
                 </time_stepping>
             </process>
@@ -157,19 +163,18 @@
 		<parameter>
             <name>initial_pressure</name>
 			<type>Function</type>
-            <expression>if (y >= -50, 0, 1000*(-50-y)*9.81)</expression>
+            <expression>if (y >= -50, 0, 1000*(-y-50)*9.81)</expression>
         </parameter>
 		<parameter>
             <name>InitialTotalStressField</name>
 			<type>Function</type>
-			<expression> 0</expression>
-			<expression> if (y >= -50, 16*1000*-y, 16*1000*50+20*(-50-y)*1000)</expression>
-			<expression> 0</expression>
-			<expression> 0</expression>
-            <!--expression> 0.3 / (1-0.3) * ((0.35-1.0)*1000 + (1-0.35)*3000) * 9.81*y</expression>
+			<expression> if (y >= -50, 0.3/(1-0.3)*(1-0.35)*2600*9.81*y, 0.3/(1-0.3)*((1-0.35)*2600*y + 0.35*1000*(y+50))*9.81)</expression>
+			<expression> if (y >= -50,             (1-0.35)*2600*9.81*y,             ((1-0.35)*2600*y + 0.35*1000*(y+50))*9.81)</expression>
+			<expression> if (y >= -50, 0.3/(1-0.3)*(1-0.35)*2600*9.81*y, 0.3/(1-0.3)*((1-0.35)*2600*y + 0.35*1000*(y+50))*9.81)</expression>
+            <expression>0</expression>
+			<!--expression> 0.3 / (1-0.3) * ((0.35-1.0)*1000 + (1-0.35)*3000) * 9.81*y</expression>
 			<expression> ((0.35-1.0)*1000 + (1-0.35)*3000) * 9.81*y</expression>
-			<expression> 0.3 / (1-0.3) * ((0.35-1.0)*1000 + (1-0.35)*3000) * 9.81*y</expression>
-			<expression> 0</expression-->
+			<expression> 0.3 / (1-0.3) * ((0.35-1.0)*1000 + (1-0.35)*3000) * 9.81*y</expression-->
         </parameter>
     </parameters>
 	
@@ -179,7 +184,7 @@
             <components>2</components>
             <order>1</order>
             <initial_condition>displacement0</initial_condition>
-			<compensate_non_equilibrium_initial_residuum>true</compensate_non_equilibrium_initial_residuum>
+			<!--compensate_non_equilibrium_initial_residuum>true</compensate_non_equilibrium_initial_residuum-->
             <boundary_conditions>
                 <boundary_condition>
                     <geometrical_set>rectangle_10x60_geometry</geometrical_set>
@@ -209,7 +214,6 @@
             <components>1</components>
             <order>1</order>
             <initial_condition>initial_pressure</initial_condition>
-			<compensate_non_equilibrium_initial_residuum>true</compensate_non_equilibrium_initial_residuum>
             <boundary_conditions>
                 <boundary_condition>
                     <mesh>domain_with_stiffness</mesh>
