@@ -3,4 +3,4 @@ Step 1: Edit generate_random_field.py to input a different random field model.
 
 Step 2: Run overall.ipynb to generate uplift graphs
 
-Prerequisite: pip install ogs vtuIO nbformat nbconvert pyvista vtk subprocess
+Prerequisite: pip install ogs6py VTUinterface nbformat nbconvert pyvista vtk 
