@@ -1,18 +1,20 @@
-This is a simple simulation of the effect of uprising groundwater table to the uplift of ground. 
+Simulation of the uplift of ground, due to groundwater lifting.
 
 ### Brief Introduction:
-The 2D mesh has size of 10m (horizontal) and 60m (vertically underground). 
-Groundwater table is assumed to rise 1m per timestep.
-There are in total 45 timesteps, so the water rises from -50m to -5m. 
+In this example, groundwater table rises from -50m to -5m (1m per timestep).
+The output graph is uplift displacement, which can be used to back estimate to the original stiffness equation.
 
-### To understand the effect of random field: 
+### New Feature
+- 2D or 3D
+- Soil layers
+- Gaussian / Exponential autocorrelation function
+- Lognormal / Normal probability density function
 
-Step 1: Edit generate_random_field.py to input a different random field model.
-(a numpy array, with shape: number of horizontal cells x number of vertical cells)
+### Steps
+Step 1: Edit Mesh_settings.py inside the _out folder. (Depth should be 60m, and number of cells in z direction should be multiple of 60)
+Step 2: Run generate_mesh_cell.
+Step 3: Run run_ogs
+Step 4: Run run_pvd, to see the displacement graphs.
 
-Step 2: Run overall.ipynb to generate uplift graphs
-
-Prerequisite: pip install ogs6py VTUinterface nbformat nbconvert pyvista vtk 
-
-P.S. All the parameters (e.g. stiffness mean, variance, ground properties etc.) are subject to change. In the meantime, a workflow is designed first.
-
+### Prerequisite: 
+pip install ogs6py VTUinterface nbformat nbconvert pyvista vtk 
