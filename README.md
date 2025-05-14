@@ -17,4 +17,4 @@ The output graph is uplift displacement, which can be used to back estimate to t
 - Step 4: Run run_pvd, to see the displacement graphs.
 
 ### Prerequisite: 
-pip install ogs6py VTUinterface nbformat nbconvert pyvista vtk 
+pip install ogs ogstools VTUinterface pyvista vtk 
