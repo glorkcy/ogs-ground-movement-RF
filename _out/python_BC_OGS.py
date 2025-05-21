@@ -9,6 +9,8 @@ except ModuleNotFoundError:
 
 import Mesh_settings
 ey = Mesh_settings.ey
+initial_GWT = -Mesh_settings.initial_GWT_depth
+delta_GW_rise = Mesh_settings.delta_time 
 
 g = 9.81  #kN/cubic meter
 
@@ -20,11 +22,12 @@ class PorePressure(OpenGeoSys.BoundaryCondition):
         else:
             z = coords[2]
         
-        GWT = -50 + 1 * _t
+        GWT = initial_GWT + delta_GW_rise * _t  
         distance_GWT_z = GWT - z
         distance_GWT_z = np.asarray(distance_GWT_z)
         depth_under_GWT = np.heaviside([distance_GWT_z], 0) * (distance_GWT_z)
-        
+
+       
         value =  g * depth_under_GWT * 1000 
         return (True, value)
 
