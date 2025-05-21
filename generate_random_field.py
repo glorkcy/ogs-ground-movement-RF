@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.spatial as sp
-
+from _out import Mesh_settings
 
 # Parameters
 lx, ly, lz = 10, 12, 60  # Length of soil in x, y, z directions (meters)   #100,100,60
@@ -9,21 +9,19 @@ ex, ey, ez = 10, 12, 60  # Number of elements in each direction             #100
 nx, ny, nz = ex + 1, ey + 1, ez + 1  # Number of nodes in each direction
 scales = (22, 22, 1)  # Correlation scales in x, y, z directions (meters)
 cov = 0  # Coefficient of variation  #0.35
-poisson =0.3
-#stiffness_young_conversion = (1+poisson)*(1-2*poisson)/(1-poisson)
 layers =  []
-#stiffness_mean = 1e7  # Mean stiffness modulus (Pa)
-#slope = 2e5  # Stiffness gradient per meter
-
+initial_GWT = - Mesh_settings.initial_GWT_depth
 
 # # Function to compute depth-dependent stiffness modulus (linear relationship)
+# stiffness_mean = 1e7  # Mean stiffness modulus (Pa)
+# slope = 2e5  # Stiffness gradient per meter
 # def depth_linear_dependent_layer(stiffness_mean, slope, lz, ez):
 #     z_positions = np.arange(-ez / 2, ez / 2)  # Depth positions centered around zero
 #     delta = slope * (lz / ez)
 #     E = stiffness_mean + z_positions * delta
 #     return E
 
-def formula_derived_layer(lz, nz, layers):
+def formula_derived_layer(lz, nz, layers, initial_GWT):
     """
     Compute the stiffness modulus (E) with multiple layers, each having different v and w.
 
@@ -40,7 +38,6 @@ def formula_derived_layer(lz, nz, layers):
     total_stress = np.zeros(nz)  # Initialize stress array
     effective_stress = np.zeros(nz)  # Initialize stress array
     E = np.zeros(nz)  # Initialize stiffness modulus array
-    water_table_depth = 50  
     
     # Compute total stress at each depth considering soil layers
     for i, depth in enumerate(depth_intervals):
@@ -52,13 +49,13 @@ def formula_derived_layer(lz, nz, layers):
                 dz = min(depth, depth_end) - depth_start  # Depth within this layer
                 stress += dz * density * 9.81 * (1 - phi)  # Accumulate total weight
 
-            # Check if current depth is below water table (below -50m)
+            # Check if current depth is below water table 
         # Calculate pore pressure if below water table
         
         total_stress[i] = stress
-
-        if depth >= water_table_depth:
-            water_height = depth - water_table_depth
+        initial_GWT_depth = -initial_GWT
+        if depth >= initial_GWT_depth:
+            water_height = depth - initial_GWT_depth
             pore_pressure = water_height * 9.81 * 1000  # Pa
             effective_stress[i] = total_stress[i] - pore_pressure
         else:
@@ -74,7 +71,7 @@ def formula_derived_layer(lz, nz, layers):
 
 # Stiffness modulus trend along the z-direction
 #stiffness_modulus_z = depth_linear_dependent_layer(stiffness_mean, slope, lz, ez)
-stiffness_modulus_z = formula_derived_layer(lz, nz, layers)
+stiffness_modulus_z = formula_derived_layer(lz, nz, layers,initial_GWT)
 
 def create_1d_correlation_matrix(nodes, scale, length, acf_type='-'):
     """
@@ -223,7 +220,6 @@ def convert_to_element_field_1d(node_field, ez):
         # Average values of the 8 corner nodes for the element
         element_field[i] = np.mean(node_field[i:i+2])
     
-    #element_field = element_field*stiffness_young_conversion   # convert to young modulus
     return element_field
 
 
@@ -239,9 +235,7 @@ def convert_to_element_field(node_field, ex, ey, ez):
             for k in range(ez):
                 # Average values of the 8 corner nodes for the element
                 element_field[i, j, k] = np.mean(node_field[i:i+2, j:j+2, k:k+2])
-    
-    
-    #element_field = element_field*stiffness_young_conversion  # convert to young modulus
+
     return element_field
 
 
