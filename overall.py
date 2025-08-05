@@ -687,7 +687,11 @@ class GroundwaterUpliftAnalyzer:
         self.load_displacement_data()
         self.compute_displacements()
         self.calculate_stiffness_modulus()
-        return self.stiffness_modulus
+        #return self.stiffness_modulus
+        return {
+            'stiffness_modulus': self.stiffness_modulus,
+            'particular_u_at_timestep_half_saturated': self.particular_u_at_timestep_half_saturated
+        }
 
 def main():
     # Step 1: Generate mesh with stiffness
@@ -702,8 +706,10 @@ def main():
     
     # Step 3: Analyze results and get stiffness
     analyzer = GroundwaterUpliftAnalyzer()
-    stiffness_modulus = analyzer.run_analysis()
-    print("Calculated stiffness modulus:", stiffness_modulus)
+    results = analyzer.run_analysis()
+    print("Calculated stiffness modulus:", results['stiffness_modulus'])
+    print("Individual displacement of GW-experiencing half-saturated cell :", results['particular_u_at_timestep_half_saturated'])
 
 if __name__ == "__main__":
     main()
+    
